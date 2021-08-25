@@ -24,3 +24,22 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Mac
+.DS_Store
+**/.DS_Store
+
+# vim/vi
+*.swp
+
+# JavaScript
+node_modules/
+.node_modules/
+.eslintcache
+unpackage/dist/build/
+unpackage/dist/dev/
+unpackage/*
+
+# python
+*.pyc
+*.hbuilderx
