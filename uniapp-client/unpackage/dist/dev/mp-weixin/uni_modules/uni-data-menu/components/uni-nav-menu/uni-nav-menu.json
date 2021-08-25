@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "uni-menu-sidebar": "/uni_modules/uni-data-menu/components/uni-menu-sidebar/uni-menu-sidebar"
+  },
+  "component": true
+}

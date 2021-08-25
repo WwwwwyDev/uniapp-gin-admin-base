@@ -1,0 +1,6 @@
+{
+  "usingComponents": {
+    "uni-data-menu": "/uni_modules/uni-data-menu/components/uni-data-menu/uni-data-menu"
+  },
+  "component": true
+}

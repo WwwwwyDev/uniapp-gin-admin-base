@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "测试",
+  "usingComponents": {
+    "fix-window": "/components/fix-window/fix-window"
+  }
+}
