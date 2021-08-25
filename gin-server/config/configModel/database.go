@@ -1,7 +1,6 @@
 package configModel
 
-type Database struct {
-	Type     string
+type Mysql struct {
 	User     string
 	Password string
 	Host     string

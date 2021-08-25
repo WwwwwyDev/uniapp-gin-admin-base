@@ -1,11 +1,19 @@
-database:
-  type: 'mysql'
+server:
+  #debug or release
+  runMode: 'debug'
+  httpPort: 8081
+
+mysql:
   user: 'root'
   password: 'wwy123456'
   host: '127.0.0.1'
   port: 3306
   name: 'ugt'
 
+redis:
+  db: 0
+  addr: '127.0.0.1:6379'
+  password: ''
 
 runtime:
   log:

@@ -1,6 +1,7 @@
 package core
 
 import (
+	"fmt"
 	"gin-server/global"
 	"github.com/sirupsen/logrus"
 	"io"
@@ -10,19 +11,23 @@ import (
 
 
 func Logrus() *logrus.Logger{
-	root := global.CONFIG.Runtime.Log
+	logrusCfg := global.CONFIG.Runtime.Log
 
 	customFormatter := new(logrus.JSONFormatter)
-	customFormatter.TimestampFormat = root.TimestampFormat // 时间格式
-	customFormatter.DisableTimestamp = root.DisableTimestamp   // 禁止显示时间
+	customFormatter.TimestampFormat = logrusCfg.TimestampFormat // 时间格式
+	customFormatter.DisableTimestamp = logrusCfg.DisableTimestamp   // 禁止显示时间
 
 	year := time.Now().Format("2006")
 	month := time.Now().Format("01")
 	day := time.Now().Format("02")
 	filename := year+month+day + ".log"
-	path := root.LogRootPath + filename
+	path := logrusCfg.LogRootPath + filename
 
-	f, _:=os.OpenFile(path,os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
+	f, err:=os.OpenFile(path,os.O_CREATE|os.O_RDWR|os.O_APPEND, os.ModeAppend|os.ModePerm)
+	if err != nil{
+		fmt.Println(err)
+		os.Exit(0)
+	}
 	mw := io.MultiWriter(os.Stdout,f)
 	log := logrus.New()
 	log.SetFormatter(customFormatter)

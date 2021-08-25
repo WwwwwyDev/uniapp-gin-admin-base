@@ -1,7 +1,9 @@
 package configModel
 
 type Config struct {
-	Database Database
+	Mysql Mysql
+	Redis Redis
 	Runtime Runtime
+	Server Server
 }
 
