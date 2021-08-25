@@ -46,3 +46,5 @@ unpackage/*
 
 *.idea
 *.iml
+*.log
+runtime/*

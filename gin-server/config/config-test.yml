@@ -1,0 +1,9 @@
+database:
+  Type: 'mysql'
+  User: 'wuwenyi'
+  Password: 'wwy123456'
+  Host: '127.0.0.1'
+  Port: 5432
+  Name: 'test3'
+  max-idle-conns: 10
+  max-open-conns: 100

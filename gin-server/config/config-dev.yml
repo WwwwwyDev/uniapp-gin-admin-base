@@ -1,0 +1,14 @@
+database:
+  type: 'mysql'
+  user: 'root'
+  password: 'wwy123456'
+  host: '127.0.0.1'
+  port: 3306
+  name: 'ugt'
+
+
+runtime:
+  log:
+    logRootPath: 'runtime/logs/'
+    disableTimestamp: false
+    timestampFormat: "2006-01-02 15:04:05"
