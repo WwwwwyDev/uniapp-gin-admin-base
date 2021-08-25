@@ -43,3 +43,6 @@ unpackage/*
 # python
 *.pyc
 *.hbuilderx
+
+*.idea
+*.iml
