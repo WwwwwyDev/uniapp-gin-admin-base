@@ -2,7 +2,7 @@ package global
 
 import (
 	"gin-server/config/configModel"
-	"github.com/go-redis/redis/v8"
+	"github.com/go-redis/redis"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 	"gorm.io/gorm"

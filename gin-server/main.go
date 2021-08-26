@@ -1,22 +1,17 @@
 package main
 
 import (
-	"fmt"
 	"gin-server/core"
-	"gin-server/global"
 	"gin-server/initialize"
-	"github.com/gin-gonic/gin"
 )
 
 func init() {
 	core.Setup("dev")
-	initialize.Setup()
+	initialize.RegisterTables()
 }
 
 func main() {
-	serverCfg := global.CONFIG.Server
-	gin.SetMode(serverCfg.RunMode)
-	endPoint := fmt.Sprintf(":%d", serverCfg.HttpPort)
-	app := initialize.RegisterRouter()
-	app.Run(endPoint)
+	//result, _ := global.REDIS.Set("test", "2343", time.).Result()
+	//fmt.Print(result)
+	initialize.Run()
 }

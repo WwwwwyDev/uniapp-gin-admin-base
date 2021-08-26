@@ -19,4 +19,11 @@ runtime:
   log:
     logRootPath: 'runtime/logs/'
     disableTimestamp: false
-    timestampFormat: "2006-01-02 15:04:05"
+    timestampFormat: '2006-01-02 15:04:05'
+
+jwt:
+  #签发人
+  issuer: 'wwy'
+
+
+

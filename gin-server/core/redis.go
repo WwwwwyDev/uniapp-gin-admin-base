@@ -1,9 +1,8 @@
 package core
 
 import (
-	"context"
 	"gin-server/global"
-	"github.com/go-redis/redis/v8"
+	"github.com/go-redis/redis"
 )
 
 func Redis() *redis.Client{
@@ -13,7 +12,7 @@ func Redis() *redis.Client{
 		Password: redisCfg.Password, // password set
 		DB:       redisCfg.DB,       // use default DB
 	})
-	pong, err := client.Ping(context.Background()).Result()
+	pong, err := client.Ping().Result()
 	if err != nil {
 		global.LOG.Error(err)
 	} else {

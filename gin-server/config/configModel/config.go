@@ -1,9 +1,9 @@
 package configModel
 
 type Config struct {
-	Mysql Mysql
-	Redis Redis
+	Mysql   Mysql
+	Redis   Redis
 	Runtime Runtime
-	Server Server
+	Server  Server
+	Jwt     Jwt
 }
-
