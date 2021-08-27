@@ -6,4 +6,5 @@ type Config struct {
 	Runtime Runtime
 	Server  Server
 	Jwt     Jwt
+	Captcha Captcha
 }

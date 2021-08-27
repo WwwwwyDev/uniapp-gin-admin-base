@@ -35,10 +35,11 @@ func GenToken(userID uint) (string, string) {
 func ParseToken(tokenString string, secret string) (*Claims){
 	// 解析token
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (i interface{}, err error) {
-		return secret, nil
+		return []byte(secret), nil
 	})
 	if err != nil {
 		global.LOG.Error(err)
+		return nil
 	}
 	return token.Claims.(*Claims)
 }

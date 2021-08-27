@@ -30,13 +30,3 @@ func OK(c *gin.Context, data interface{}, msg string) {
 	}
 	c.JSON(http.StatusOK, res.ReturnOK())
 }
-
-// 密码错误数据处理
-func PswError(c *gin.Context, data interface{}, msg string) {
-	var res Response
-	res.Data = data
-	if msg != "" {
-		res.Msg = msg
-	}
-	c.JSON(http.StatusOK, res.ReturnFalse())
-}

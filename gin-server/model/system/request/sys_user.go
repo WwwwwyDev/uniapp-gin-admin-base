@@ -1,12 +1,12 @@
 package request
 
 type Register struct {
-	Username  string `json:"userName"`
-	Password  string `json:"passWord"`
-	NickName  string `json:"nickName"`
-	HeaderImg string `json:"headerImg"`
-	Email     string `json:"email"`
-	Phone     string `json:"phone"`
+	Username  string `json:"userName"`  // 用户名
+	Password  string `json:"passWord"`  // 密码
+	NickName  string `json:"nickName"`  //昵称
+	HeaderImg string `json:"headerImg"` //头像链接
+	Email     string `json:"email"`     //电子邮箱
+	Phone     string `json:"phone"`     //联系电话
 }
 
 type Login struct {

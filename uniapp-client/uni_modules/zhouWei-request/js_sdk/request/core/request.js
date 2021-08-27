@@ -109,7 +109,7 @@ export default class request {
 				requestResult = await dispatchRequest(requestInfo);
 			}
 			//是否用外部的数据处理方法
-            requestInfo.isFactory = false;
+            requestInfo.isFactory = true;
 			if (requestInfo.isFactory && this.dataFactory) {
 				//数据处理
 				let result = await this.dataFactory({

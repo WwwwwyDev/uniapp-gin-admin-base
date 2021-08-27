@@ -1,21 +1,23 @@
 package initialize
 
 import (
+	_ "gin-server/docs"
 	"gin-server/global"
 	"gin-server/middleware"
 	"gin-server/router"
 	"gin-server/router/system"
 	"github.com/gin-gonic/gin"
+	ginSwagger "github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 	"net/http"
 	"os"
-	"github.com/swaggo/gin-swagger"
-	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 //无需认证
 func sysNoCheckRoleRouter(r *gin.RouterGroup) {
 	r = r.Group("/v1")
 	system.SysUserRouter(r)
+	system.SysCaptchaRouter(r)
 }
 
 //认证

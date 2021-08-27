@@ -7,35 +7,35 @@
             <view class="uni-title">系统登录</view>
         </view>
         <view class="uni-container">
-            <uni-forms ref="form" v-model="formData" :rules="rules" @submit="submit">
+            <uni-forms ref="form" v-model="userFormData" :rules="rules" @submit="submit">
                 <uni-forms-item left-icon="person-filled" name="username" labelWidth="35">
-                    <input ref="usernameInput" @confirm="login" class="uni-input-border" type="text"
-                        placeholder="账户" v-model="formData.username" />
+                    <input ref="usernameInput" @confirm="login" class="uni-input-border" type="text" placeholder="账户"
+                        v-model="userFormData.username" />
                 </uni-forms-item>
                 <uni-forms-item left-icon="locked-filled" class="icon-container" name="password" labelWidth="35">
                     <input ref="passwordInput" @confirm="login" class="uni-input-border" :password="showPassword"
-                        placeholder="密码" v-model="formData.password" />
+                        placeholder="密码" v-model="userFormData.password" />
                     <text class="uni-icon-password-eye pointer" :class="[!showPassword ? 'uni-eye-active' : '']"
                         @click="changePassword">&#xe568;</text>
                 </uni-forms-item>
                 <uni-forms-item v-if="needCaptcha" left-icon="image" class="icon-container" name="captcha"
                     labelWidth="35">
-                    <input ref="captchaInput" @confirm="login" class="uni-input-border" type="text"
-                        placeholder="验证码" v-model="formData.captcha" />
+                    <input ref="captchaInput" @confirm="login" class="uni-input-border" type="text" placeholder="验证码"
+                        v-model="userFormData.captcha" />
                     <view class="admin-captcha-img pointer" @click="createCaptcha">
                         <i v-if="captchaLoading" class="uni-loading"></i>
                         <img v-else :src="captchaBase64" width="100%" height="100%" />
                     </view>
                 </uni-forms-item>
                 <view class="uni-button-group">
-<!--                   <button class="uni-button uni-button-full" type="primary" :loading="loading" :disabled="loading"
-                    	@click="login">登录</button>
-                    <button class="uni-button uni-button-full" style="margin-left:10px;" type="primary" :loading="loading" :disabled="loading"
-                    	@click="register">注册</button> -->
-                  <u-button class="uni-button uni-button-full" :ripple="true" ripple-bg-color="#909399" :plain="true" shape="circle" size="medium" type="primary" :loading="loading" :disabled="loading"
+                    <button class="uni-button uni-button-full" type="primary" :loading="loading" :disabled="loading"
+                        @click="login">登录</button>
+                    <button class="uni-button uni-button-full" style="margin-left:10px;" type="primary"
+                        :loading="loading" :disabled="true" @click="register">注册</button>
+                    <!--                  <u-button class="uni-button uni-button-full" :ripple="true" ripple-bg-color="#909399" :plain="true" shape="circle" size="medium" type="primary" :loading="loading" :disabled="loading"
                         @click="login">登录</u-button>
                     <u-button class="uni-button uni-button-full" style="margin-left:10px;" :ripple="true" ripple-bg-color="#909399" :plain="true" shape="circle" size="medium" type="primary" :loading="loading" :disabled="true"
-                        @click="register">注册</u-button>
+                        @click="register">注册</u-button> -->
                 </view>
             </uni-forms>
         </view>
@@ -51,13 +51,14 @@
                 indexPage: config.index.url,
                 showPassword: true,
                 loading: false,
-                formData: {
+                userFormData: {
                     username: '',
                     password: '',
                     captcha: '',
+                    captchaId: ''
                 },
                 captchaLoading: false,
-                needCaptcha: false,
+                needCaptcha: true,
                 captchaBase64: '',
                 rules: {
                     // 对name字段进行必填验证
@@ -67,13 +68,13 @@
                                 errorMessage: '请输入账户',
                             },
                             {
-                                minLength: 1,
-                                maxLength: 30,
+                                minLength: 4,
+                                maxLength: 16,
                                 errorMessage: '账户长度在{minLength}到{maxLength}个字符',
                             }
                         ]
                     },
-                    // 对email字段进行必填验证
+                    // 对password字段进行必填验证
                     password: {
                         rules: [{
                                 required: true,
@@ -81,14 +82,15 @@
                             },
                             {
                                 minLength: 6,
-                                errorMessage: '密码长度大于{minLength}个字符',
+                                maxLength: 16,
+                                errorMessage: '密码长度在{minLength}到{maxLength}个字符',
                             }
                         ]
                     },
                     // 对captcha字段进行必填验证
                     captcha: {
                         rules: [{
-                            required: false,
+                            required: true,
                             errorMessage: '请输入验证码',
                         }]
                     },
@@ -96,23 +98,24 @@
             }
         },
         mounted() {
-        	// #ifdef H5
-        	// #ifndef VUE3
-        	this.focus()
-        	// #endif
-        	// #endif
+            // #ifdef H5
+            // #ifndef VUE3
+            this.focus()
+            // #endif
+            // #endif
+            this.createCaptcha()
         },
         methods: {
-            async submit(event) {                
+            async submit(event) {
                 if (this.loading) {
-                	return
+                    return
                 }
                 const {
-                	errors,
-                	value
+                    errors,
+                    value
                 } = event.detail;
                 if (errors) {
-                	return
+                    return
                 }
                 this.loading = true;
                 // #ifdef H5
@@ -122,21 +125,24 @@
                 this.$refs.captchaInput && this.$refs.captchaInput.$refs.input.blur()
                 // #endif
                 // #endif
-                let res = await this.$http.post('system/apis/login', this.formData).catch((e)=>{});
+                let res = await this.$http.post('/api/v1/sysUser/login', this.userFormData).catch((e) => {});
+                console.log(res);
                 this.loading = false;
             },
             async createCaptcha() {
-            	this.captchaLoading = true
-            	let res = await this.$http.post('createCaptcha', {}).catch((e)=>{});
+                this.captchaLoading = true
+                let res = await this.$http.post('/api/v1/sysCaptcha', {}).catch((e) => {});
+                this.captchaBase64 = res.data.picPath;
+                this.userFormData.captchaId = res.data.captchaId;
                 this.captchaLoading = false
             },
-            register(){
+            register() {
                 console.log("注册(跳转到注册页)");
             },
             login() {
-                 //this.$refs.form.submit().catch((e)=>{});
+                this.submit();
                 uni.redirectTo({
-                	url: this.indexPage
+                    url: this.indexPage
                 })
             },
             changePassword: function() {
@@ -144,7 +150,7 @@
             },
             // #ifdef H5
             focus: function() {
-            	this.$refs.usernameInput.$refs.input.focus()
+                this.$refs.usernameInput.$refs.input.focus()
             },
             // #endif
         }
