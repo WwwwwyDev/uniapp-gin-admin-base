@@ -8,6 +8,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"os"
+	"github.com/swaggo/gin-swagger"
+	"github.com/swaggo/gin-swagger/swaggerFiles"
 )
 
 //无需认证
@@ -20,9 +22,8 @@ func sysNoCheckRoleRouter(r *gin.RouterGroup) {
 func sysCheckRoleRouter(r *gin.RouterGroup) {
 	r = r.Group("/v1/c")
 	r.Use(middleware.JWTAuth())
-	router.TestRouter(r)
+	router.TestJwtRouter(r)
 }
-
 
 func RegisterRouter() *gin.Engine {
 	r := gin.New()
@@ -35,6 +36,7 @@ func RegisterRouter() *gin.Engine {
 	}
 	r.StaticFS("/upload", http.Dir(path+"/runtime/upload"))
 	r.StaticFile("/favicon.ico", path+"/favicon.ico")
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	g := r.Group("/api")
 	sysNoCheckRoleRouter(g)
 	sysCheckRoleRouter(g)

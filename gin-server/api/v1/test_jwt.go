@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func JwtTest(c *gin.Context) {
+func TestJwt(c *gin.Context) {
 	get, _ := c.Get("claims")
 	app.OK(c, get,"OK")
 }

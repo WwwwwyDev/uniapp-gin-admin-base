@@ -48,3 +48,5 @@ unpackage/*
 *.iml
 *.log
 runtime/*
+runtime/upload/*
+runtime/logs/*
