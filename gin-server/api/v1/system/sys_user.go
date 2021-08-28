@@ -8,6 +8,7 @@ import (
 	service "gin-server/service/system"
 	"gin-server/util"
 	"gin-server/util/app"
+	"gin-server/util/captcha"
 	"gin-server/util/e"
 	"gin-server/util/valid"
 	"github.com/gin-gonic/gin"
@@ -48,7 +49,7 @@ func Register(c *gin.Context) {
 // @Summary 用户登录
 // @Produce  application/json
 // @Param data body Req.Login true "用户名, 密码, 验证码，验证码ID"
-// @Success 200 {string} string "{"success":true,"data":{},"msg":"登陆成功"}"
+// @Success 200 {string} string "{"code": 20000,"data":{},"msg":"登陆成功"}"
 // @Router /api/v1/sysUser/login [post]
 func Login(c *gin.Context) {
 	var r Req.Login
@@ -58,12 +59,16 @@ func Login(c *gin.Context) {
 		app.Error(c, e.ERROR, err, err.Error())
 		return
 	}
-	//store := captcha.NewDefaultRedisStore()
-	//verify := store.Verify(r.CaptchaId, r.Captcha, true)
-	//if r.Captcha == "" || !verify {
-	//	app.Error(c, e.ERROR_LOGIN_FAIL, errors.New("验证码错误"), "验证码错误")
-	//	return
-	//}
+	store := captcha.NewDefaultRedisStore()
+	getCaptcha := store.Get(r.CaptchaId, true)
+	if getCaptcha == ""{
+		app.Error(c, e.ERROR_LOGIN_FAIL, errors.New("验证码失效"), "验证码失效")
+		return
+	}
+	if r.Captcha != getCaptcha {
+		app.Error(c, e.ERROR_LOGIN_FAIL, errors.New("验证码错误"), "验证码错误")
+		return
+	}
 	u := model.SysUser{Username: r.Username, Password: r.Password}
 	err1, ur := service.Login(u)
 	if err1 != nil {

@@ -1,4 +1,4 @@
-package v1
+package system
 
 import (
 	"errors"
@@ -10,10 +10,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// @Tags DecodeJwt
+// @Tags SysJwt
 // @Summary jwt解码,反馈用户信息
 // @Produce  application/json
-// @Success 200 {string} string "{"success":true,"data":{},"msg":"解码成功"}"
+// @Success 200 {string} string "{"code": 20000,"data":{},"msg":"解码成功"}"
 // @Router /api/v1/c/jwt [post]
 func DecodeJwt(c *gin.Context) {
 	get, _ := c.Get("claims")
@@ -33,4 +33,21 @@ func DecodeJwt(c *gin.Context) {
 		return
 	}
 	app.OK(c, inter,"解码成功")
+}
+
+
+// @Tags SysJwt
+// @Summary 删除用户token
+// @Produce  application/json
+// @Success 200 {string} string "{"code": 20000,"data":{},"msg":"删除成功"}"
+// @Router /api/v1/c/jwt [DELETE]
+func DelJwt(c *gin.Context) {
+	token := c.Request.Header.Get("j-token")
+	_, err := global.REDIS.Del("SYSUSER_"+token).Result()
+	if err != nil {
+		global.LOG.Error(err)
+		app.Error(c, e.ERROR, err, err.Error())
+		return
+	}
+	app.OK(c, map[string]interface{}{}, "删除成功")
 }

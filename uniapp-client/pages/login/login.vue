@@ -30,6 +30,8 @@
                 <view class="uni-button-group">
                     <button class="uni-button uni-button-full" type="primary" :loading="loading" :disabled="loading"
                         @click="login">登录</button>
+<!--                    <button class="uni-button uni-button-full" style="margin-left:10px;" type="primary"
+                        :loading="loading" :disabled="loading" @click="register">注册</button> -->
                 </view>
             </uni-forms>
         </view>
@@ -38,12 +40,13 @@
 
 <script>
     import config from '@/admin.config.js'
-    import { mapMutations } from 'vuex'
+    import {
+        mapActions
+    } from 'vuex'
     export default {
         data() {
             return {
                 ...config.navBar,
-                indexPage: config.index.url,
                 showPassword: true,
                 loading: false,
                 formData: {
@@ -85,14 +88,27 @@
                     // 对captcha字段进行必填验证
                     captcha: {
                         rules: [{
-                            required: false,
+                            required: true,
                             errorMessage: '请输入验证码',
                         }]
                     },
                 }
             }
         },
-        mounted() {
+        async mounted() {
+            let f = await this.isValidToken()
+            if (f) {
+                uni.showToast({
+                    title: "请不要重复登录",
+                    icon: "none"
+                })
+                await setTimeout(function() {
+                    uni.redirectTo({
+                        url: config.index.url
+                    })
+                }, 600);
+                return;
+            }
             // #ifdef H5
             // #ifndef VUE3
             this.focus()
@@ -138,22 +154,32 @@
                         title: res.msg,
                         icon: "none"
                     })
-                    uni.setStorageSync("j-token",res.data.token);
-                    let that = this;
+                    uni.setStorageSync("j-token", res.data.token);
+
                     await setTimeout(function() {
                         uni.redirectTo({
-                            url: that.indexPage
+                            url: config.index.url
                         })
-                    }, 1000);
+                    }, 600);
                 }
                 this.loading = false;
             },
             async createCaptcha() {
                 this.captchaLoading = true
                 let res = await this.$http.post('/api/v1/sysCaptcha', {});
+                if (res.code == 40001) {
+                    uni.showToast({
+                        title: res.msg,
+                        icon: "none"
+                    })
+                    return;
+                }
                 this.captchaBase64 = res.data.picPath;
                 this.formData.captchaId = res.data.captchaId;
                 this.captchaLoading = false
+            },
+            register() {
+                console.log("注册(跳转到注册页)");
             },
             login() {
                 this.$refs.form.submit();
@@ -162,11 +188,16 @@
             changePassword: function() {
                 this.showPassword = !this.showPassword;
             },
+
             // #ifdef H5
             focus: function() {
                 this.$refs.usernameInput.$refs.input.focus()
             },
             // #endif
+            
+            ...mapActions({
+                isValidToken: 'user/isValidToken',
+            })
         }
     }
 </script>

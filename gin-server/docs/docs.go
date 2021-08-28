@@ -29,12 +29,29 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "DecodeJwt"
+                    "SysJwt"
                 ],
                 "summary": "jwt解码,反馈用户信息",
                 "responses": {
                     "200": {
-                        "description": "{\"success\":true,\"data\":{},\"msg\":\"解码成功\"}",
+                        "description": "{\"code\": 20000,\"data\":{},\"msg\":\"解码成功\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SysJwt"
+                ],
+                "summary": "删除用户token",
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 20000,\"data\":{},\"msg\":\"删除成功\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -61,7 +78,7 @@ var doc = `{
                 "summary": "生成验证码",
                 "responses": {
                     "200": {
-                        "description": "{\"success\":true,\"data\":{},\"msg\":\"验证码获取成功\"}",
+                        "description": "{\"code\": 20000,\"data\":{},\"msg\":\"验证码获取成功\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -91,7 +108,7 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"success\":true,\"data\":{},\"msg\":\"登陆成功\"}",
+                        "description": "{\"code\": 20000,\"data\":{},\"msg\":\"登陆成功\"}",
                         "schema": {
                             "type": "string"
                         }

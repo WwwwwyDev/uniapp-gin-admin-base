@@ -14,7 +14,7 @@
             <view class="navbar-left pointer">
                 <navigator class="logo" open-type="reLaunch" url="/">
                     <image :src="logo" mode="heightFix"></image>
-                    <text>{{"后台管理系统"}}</text>
+                    <text>后台管理系统</text>
                 </navigator>
                 <uni-icons @click="toggleSidebar" type="bars" class="menu-icon" size="30" color="#999"></uni-icons>
             </view>
@@ -56,6 +56,7 @@
 </template>
 
 <script>
+    import { mapActions } from 'vuex'
     import config from '@/admin.config.js'
     export default {
         props: {
@@ -102,10 +103,24 @@
             chagePassword() {
             	!this.matchLeftWindow ? this.toPasswordPage() : this.showPasswordPopup()
             },
-            logout() {
-                uni.redirectTo({
-                	url: config.login.url
+            async logout() {
+                let f = await this.delToken()
+                if (!f){
+                    uni.showToast({
+                        title: " 登出失败",
+                        icon: "none"
+                    })
+                    return;
+                }
+                uni.showToast({
+                    title: " 登出成功",
+                    icon: "none"
                 })
+                await setTimeout(function() {
+                    uni.redirectTo({
+                        url: config.login.url
+                    })
+                }, 500);
             },
             togglePopupMenu() {
                 this.popupMenuOpened = !this.popupMenuOpened
@@ -119,7 +134,10 @@
             },
             personIfm(){
                 console.log("ifm")
-            },            
+            },
+            ...mapActions({
+                delToken: 'user/delToken',
+            })
         }
     }
 </script>

@@ -1,5 +1,4 @@
 import user from './modules/user.js'
-
 // #ifndef VUE3
 import Vue from 'vue'
 import Vuex from 'vuex'

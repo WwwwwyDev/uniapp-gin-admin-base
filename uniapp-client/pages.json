@@ -17,9 +17,7 @@
     }, {
         "path": "pages/error/404",
         "style": {
-            "topWindow": false,
-            "leftWindow": false,
-            "navigationBarTitleText": "Not Found"
+            "navigationBarTitleText": "未找到页面"
         }
     }, {
         "path": "pages/test/test",

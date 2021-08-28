@@ -17,38 +17,44 @@ func JWTAuth() gin.HandlerFunc {
 		if token == ""{
 			err := errors.New("未携带j-token")
 			app.Error(c,e.ERROR,err,err.Error())
+			c.Abort()
 			return
 		}
 		result, err := global.REDIS.Exists("SYSUSER_"+token).Result()
 		if err != nil {
 			global.LOG.Error(err)
 			app.Error(c,e.ERROR,err,err.Error())
+			c.Abort()
 			return
 		}
 		if result == 0{
 			err := errors.New("无效的j-token")
 			global.LOG.Error(err)
 			app.Error(c,e.ERROR_AUTH_CHECK_TOKEN_TIMEOUT,err,err.Error())
+			c.Abort()
 			return
 		}
 		secret, err1 := global.REDIS.Get("SYSUSER_"+token).Result()
 		if err1 != nil {
 			global.LOG.Error(err1)
 			app.Error(c,e.ERROR,err1,err1.Error())
+			c.Abort()
 			return
 		}
 		duration, err2 := global.REDIS.TTL("SYSUSER_"+token).Result()
 		if err2 != nil {
 			global.LOG.Error(err2)
 			app.Error(c,e.ERROR,err2,err2.Error())
+			c.Abort()
 			return
 		}
-		if duration.Nanoseconds() < time.Second.Nanoseconds()*100{
+		if duration.Nanoseconds() < time.Second.Nanoseconds()*1600{
 			//jwt延寿
 			_, err := global.REDIS.Set("SYSUSER_"+token, secret, time.Second*1800).Result()
 			if err != nil {
 				global.LOG.Error(err)
 				app.Error(c,e.ERROR,err,err.Error())
+				c.Abort()
 				return
 			}
 		}
@@ -56,6 +62,7 @@ func JWTAuth() gin.HandlerFunc {
 		if claims == nil {
 			err := errors.New("jwt声明解析错误")
 			app.Error(c,e.ERROR_AUTH_CHECK_TOKEN_FAIL,err,err.Error())
+			c.Abort()
 			return
 		}
 		c.Set("claims", claims)

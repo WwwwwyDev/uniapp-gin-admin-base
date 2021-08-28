@@ -4,7 +4,6 @@ import (
 	_ "gin-server/docs"
 	"gin-server/global"
 	"gin-server/middleware"
-	"gin-server/router"
 	"gin-server/router/system"
 	"github.com/gin-gonic/gin"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -24,7 +23,7 @@ func sysNoCheckRoleRouter(r *gin.RouterGroup) {
 func sysCheckRoleRouter(r *gin.RouterGroup) {
 	r = r.Group("/v1/c")
 	r.Use(middleware.JWTAuth())
-	router.TestJwtRouter(r)
+	system.SysJwtRouter(r)
 }
 
 func RegisterRouter() *gin.Engine {
@@ -32,6 +31,7 @@ func RegisterRouter() *gin.Engine {
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 	r.Use(middleware.Cors())
+	r.Use(middleware.RateLimit())
 	path, err := os.Getwd()
 	if err != nil {
 		global.LOG.Error(err)

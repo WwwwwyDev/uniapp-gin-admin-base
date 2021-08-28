@@ -6,7 +6,6 @@ import uView from "uview-ui";
 import store from './store'
 import $http from '@/uni_modules/zhouWei-request/js_sdk/requestConfig';
 Vue.prototype.$http = $http;
-Vue.prototype.$store = store;
 Vue.use(uView);
 Vue.config.productionTip = false
 

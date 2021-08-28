@@ -39,17 +39,28 @@ info:
   contact: {}
 paths:
   /api/v1/c/jwt:
+    delete:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 20000,"data":{},"msg":"删除成功"}'
+          schema:
+            type: string
+      summary: 删除用户token
+      tags:
+      - SysJwt
     post:
       produces:
       - application/json
       responses:
         "200":
-          description: '{"success":true,"data":{},"msg":"解码成功"}'
+          description: '{"code": 20000,"data":{},"msg":"解码成功"}'
           schema:
             type: string
       summary: jwt解码,反馈用户信息
       tags:
-      - DecodeJwt
+      - SysJwt
   /api/v1/sysCaptcha:
     post:
       consumes:
@@ -58,7 +69,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"success":true,"data":{},"msg":"验证码获取成功"}'
+          description: '{"code": 20000,"data":{},"msg":"验证码获取成功"}'
           schema:
             type: string
       security:
@@ -79,7 +90,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"success":true,"data":{},"msg":"登陆成功"}'
+          description: '{"code": 20000,"data":{},"msg":"登陆成功"}'
           schema:
             type: string
       summary: 用户登录

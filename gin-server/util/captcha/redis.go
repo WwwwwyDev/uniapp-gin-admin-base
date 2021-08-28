@@ -8,7 +8,7 @@ import (
 
 func NewDefaultRedisStore() RedisStore {
 	return RedisStore{
-		Expiration: time.Second * 180,
+		Expiration: time.Second * 100,
 		PreKey:     "CAPTCHA_",
 	}
 }
@@ -26,13 +26,13 @@ func (rs RedisStore) Set(id string, value string) error{
 }
 
 func (rs RedisStore) Get(key string, clear bool) string {
-	val, err := global.REDIS.Get(key).Result()
+	val, err := global.REDIS.Get(rs.PreKey+key).Result()
 	if err != nil {
 		global.LOG.Error("RedisStoreGetError!", err)
 		return ""
 	}
 	if clear {
-		err := global.REDIS.Del(key).Err()
+		err := global.REDIS.Del(rs.PreKey+key).Err()
 		if err != nil {
 			global.LOG.Error("RedisStoreClearError!", err)
 			return ""
@@ -42,7 +42,7 @@ func (rs RedisStore) Get(key string, clear bool) string {
 }
 
 func (rs RedisStore) Verify(id, answer string, clear bool) bool {
-	key := rs.PreKey + id
+	key := id
 	v := rs.Get(key, clear)
 	return v == answer
 }
