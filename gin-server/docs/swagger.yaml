@@ -38,6 +38,18 @@ definitions:
 info:
   contact: {}
 paths:
+  /api/v1/c/jwt:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"success":true,"data":{},"msg":"解码成功"}'
+          schema:
+            type: string
+      summary: jwt解码,反馈用户信息
+      tags:
+      - DecodeJwt
   /api/v1/sysCaptcha:
     post:
       consumes:

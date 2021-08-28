@@ -7,21 +7,21 @@
             <view class="uni-title">系统登录</view>
         </view>
         <view class="uni-container">
-            <uni-forms ref="form" v-model="userFormData" :rules="rules" @submit="submit">
+            <uni-forms ref="form" v-model="formData" :rules="rules" @submit="submit">
                 <uni-forms-item left-icon="person-filled" name="username" labelWidth="35">
                     <input ref="usernameInput" @confirm="login" class="uni-input-border" type="text" placeholder="账户"
-                        v-model="userFormData.username" />
+                        v-model="formData.username" />
                 </uni-forms-item>
                 <uni-forms-item left-icon="locked-filled" class="icon-container" name="password" labelWidth="35">
                     <input ref="passwordInput" @confirm="login" class="uni-input-border" :password="showPassword"
-                        placeholder="密码" v-model="userFormData.password" />
+                        placeholder="密码" v-model="formData.password" />
                     <text class="uni-icon-password-eye pointer" :class="[!showPassword ? 'uni-eye-active' : '']"
                         @click="changePassword">&#xe568;</text>
                 </uni-forms-item>
                 <uni-forms-item v-if="needCaptcha" left-icon="image" class="icon-container" name="captcha"
                     labelWidth="35">
                     <input ref="captchaInput" @confirm="login" class="uni-input-border" type="text" placeholder="验证码"
-                        v-model="userFormData.captcha" />
+                        v-model="formData.captcha" />
                     <view class="admin-captcha-img pointer" @click="createCaptcha">
                         <i v-if="captchaLoading" class="uni-loading"></i>
                         <img v-else :src="captchaBase64" width="100%" height="100%" />
@@ -30,12 +30,6 @@
                 <view class="uni-button-group">
                     <button class="uni-button uni-button-full" type="primary" :loading="loading" :disabled="loading"
                         @click="login">登录</button>
-                    <button class="uni-button uni-button-full" style="margin-left:10px;" type="primary"
-                        :loading="loading" :disabled="true" @click="register">注册</button>
-                    <!--                  <u-button class="uni-button uni-button-full" :ripple="true" ripple-bg-color="#909399" :plain="true" shape="circle" size="medium" type="primary" :loading="loading" :disabled="loading"
-                        @click="login">登录</u-button>
-                    <u-button class="uni-button uni-button-full" style="margin-left:10px;" :ripple="true" ripple-bg-color="#909399" :plain="true" shape="circle" size="medium" type="primary" :loading="loading" :disabled="true"
-                        @click="register">注册</u-button> -->
                 </view>
             </uni-forms>
         </view>
@@ -44,6 +38,7 @@
 
 <script>
     import config from '@/admin.config.js'
+    import { mapMutations } from 'vuex'
     export default {
         data() {
             return {
@@ -51,7 +46,7 @@
                 indexPage: config.index.url,
                 showPassword: true,
                 loading: false,
-                userFormData: {
+                formData: {
                     username: '',
                     password: '',
                     captcha: '',
@@ -90,7 +85,7 @@
                     // 对captcha字段进行必填验证
                     captcha: {
                         rules: [{
-                            required: true,
+                            required: false,
                             errorMessage: '请输入验证码',
                         }]
                     },
@@ -125,25 +120,44 @@
                 this.$refs.captchaInput && this.$refs.captchaInput.$refs.input.blur()
                 // #endif
                 // #endif
-                let res = await this.$http.post('/api/v1/sysUser/login', this.userFormData).catch((e) => {});
-                console.log(res);
+                let res = await this.$http.post('/api/v1/sysUser/login', this.formData);
+                if (res.code == -1) {
+                    uni.showToast({
+                        title: "后台出错",
+                        icon: "none"
+                    })
+                }
+                if (res.code == 50000) {
+                    uni.showToast({
+                        title: res.msg,
+                        icon: "none"
+                    })
+                }
+                if (res.code == 20000) {
+                    uni.showToast({
+                        title: res.msg,
+                        icon: "none"
+                    })
+                    uni.setStorageSync("j-token",res.data.token);
+                    let that = this;
+                    await setTimeout(function() {
+                        uni.redirectTo({
+                            url: that.indexPage
+                        })
+                    }, 1000);
+                }
                 this.loading = false;
             },
             async createCaptcha() {
                 this.captchaLoading = true
-                let res = await this.$http.post('/api/v1/sysCaptcha', {}).catch((e) => {});
+                let res = await this.$http.post('/api/v1/sysCaptcha', {});
                 this.captchaBase64 = res.data.picPath;
-                this.userFormData.captchaId = res.data.captchaId;
+                this.formData.captchaId = res.data.captchaId;
                 this.captchaLoading = false
             },
-            register() {
-                console.log("注册(跳转到注册页)");
-            },
             login() {
-                this.submit();
-                uni.redirectTo({
-                    url: this.indexPage
-                })
+                this.$refs.form.submit();
+                this.createCaptcha();
             },
             changePassword: function() {
                 this.showPassword = !this.showPassword;

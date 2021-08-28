@@ -1,27 +1,27 @@
 {
-    "name" : "uniapp-admin-base",
-    "appid" : "__UNI__1000A91",
-    "description" : "",
-    "versionName" : "1.0.0",
-    "versionCode" : "100",
-    "transformPx" : false,
-    "app-plus" : {
+    "name": "uniapp-admin-base",
+    "appid": "__UNI__1000A91",
+    "description": "",
+    "versionName": "1.0.0",
+    "versionCode": "100",
+    "transformPx": false,
+    "app-plus": {
         /* 5+App特有相关 */
-        "usingComponents" : true,
-        "nvueCompiler" : "uni-app",
-        "splashscreen" : {
-            "alwaysShowBeforeRender" : true,
-            "waiting" : true,
-            "autoclose" : true,
-            "delay" : 0
+        "usingComponents": true,
+        "nvueCompiler": "uni-app",
+        "splashscreen": {
+            "alwaysShowBeforeRender": true,
+            "waiting": true,
+            "autoclose": true,
+            "delay": 0
         },
-        "modules" : {},
+        "modules": {},
         /* 模块配置 */
-        "distribute" : {
+        "distribute": {
             /* 应用发布信息 */
-            "android" : {
+            "android": {
                 /* android打包配置 */
-                "permissions" : [
+                "permissions": [
                     "<uses-permission android:name=\"android.permission.CHANGE_NETWORK_STATE\"/>",
                     "<uses-permission android:name=\"android.permission.MOUNT_UNMOUNT_FILESYSTEMS\"/>",
                     "<uses-permission android:name=\"android.permission.VIBRATE\"/>",
@@ -39,20 +39,30 @@
                     "<uses-permission android:name=\"android.permission.WRITE_SETTINGS\"/>"
                 ]
             },
-            "ios" : {},
+            "ios": {},
             /* ios打包配置 */
-            "sdkConfigs" : {}
+            "sdkConfigs": {}
         }
     },
     /* SDK配置 */
-    "quickapp" : {},
+    "quickapp": {},
     /* 快应用特有相关 */
-    "mp-weixin" : {
+    "mp-weixin": {
         /* 小程序特有相关 */
-        "appid" : "wxfcf3f8044be90641",
-        "setting" : {
-            "urlCheck" : false
+        "appid": "wxfcf3f8044be90641",
+        "setting": {
+            "urlCheck": false
         },
-        "usingComponents" : true
+        "usingComponents": true
+    },
+    "h5": {
+        "devServer": {
+            "https": false
+        },
+        "optimization": {
+            "treeShaking": {
+                "enable": true
+            }
+        }
     }
 }

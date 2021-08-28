@@ -114,7 +114,7 @@ $http.requestStart = function(options) {
 		}
 	}
 	//请求前加入token
-	//options.header['j-token'] = "你的项目登录token";
+	options.header['j-token'] = uni.getStorageSync("j-token");
 	return options; // return false 表示请求拦截，不会继续请求
 }
 //请求结束

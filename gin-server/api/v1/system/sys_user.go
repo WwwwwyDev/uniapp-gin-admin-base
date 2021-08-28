@@ -8,7 +8,6 @@ import (
 	service "gin-server/service/system"
 	"gin-server/util"
 	"gin-server/util/app"
-	"gin-server/util/captcha"
 	"gin-server/util/e"
 	"gin-server/util/valid"
 	"github.com/gin-gonic/gin"
@@ -59,17 +58,17 @@ func Login(c *gin.Context) {
 		app.Error(c, e.ERROR, err, err.Error())
 		return
 	}
-	store := captcha.NewDefaultRedisStore()
-	verify := store.Verify(r.CaptchaId, r.Captcha, true)
-	if r.Captcha == "" || !verify {
-		app.Error(c, e.ERROR_LOGIN_FAIL, errors.New("验证码错误"), "验证码错误")
-		return
-	}
+	//store := captcha.NewDefaultRedisStore()
+	//verify := store.Verify(r.CaptchaId, r.Captcha, true)
+	//if r.Captcha == "" || !verify {
+	//	app.Error(c, e.ERROR_LOGIN_FAIL, errors.New("验证码错误"), "验证码错误")
+	//	return
+	//}
 	u := model.SysUser{Username: r.Username, Password: r.Password}
 	err1, ur := service.Login(u)
 	if err1 != nil {
 		global.LOG.Error(err1)
-		app.Error(c, e.ERROR, err1, err1.Error())
+		app.Error(c, e.ERROR_LOGIN_FAIL, err1, "没有此用户")
 		return
 	}
 	rp := util.MD5V([]byte(ur.Salt + u.Password))

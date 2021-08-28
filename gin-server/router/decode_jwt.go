@@ -7,5 +7,5 @@ import (
 
 func TestJwtRouter(r *gin.RouterGroup)  {
 	r = r.Group("/jwt")
-	r.POST("", v1.TestJwt)
+	r.POST("", v1.DecodeJwt)
 }
