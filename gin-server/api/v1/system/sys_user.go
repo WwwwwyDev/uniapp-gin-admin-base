@@ -52,6 +52,7 @@ func Register(c *gin.Context) {
 // @Success 200 {string} string "{"code": 20000,"data":{},"msg":"登陆成功"}"
 // @Router /api/v1/sysUser/login [post]
 func Login(c *gin.Context) {
+
 	var r Req.Login
 	err := c.ShouldBindJSON(&r)
 	if err != nil {

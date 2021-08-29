@@ -15,6 +15,7 @@
                 <navigator class="logo" open-type="reLaunch" url="/">
                     <image :src="logo" mode="heightFix"></image>
                     <text>后台管理系统</text>
+                    <uni-link href="https://gitee.com/wu_wen_yi/uniapp-gin-admin-base" text="开源地址" showUnderLine="true" color="#0000FF" :showUnderLine="true" ></uni-link>
                 </navigator>
                 <uni-icons @click="toggleSidebar" type="bars" class="menu-icon" size="30" color="#999"></uni-icons>
             </view>
@@ -106,10 +107,7 @@
             async logout() {
                 let f = await this.delToken()
                 if (!f){
-                    uni.showToast({
-                        title: " 登出失败",
-                        icon: "none"
-                    })
+                    this.isValidSession()
                     return;
                 }
                 uni.showToast({
@@ -120,7 +118,7 @@
                     uni.redirectTo({
                         url: config.login.url
                     })
-                }, 500);
+                }, 500);              
             },
             togglePopupMenu() {
                 this.popupMenuOpened = !this.popupMenuOpened
@@ -137,6 +135,7 @@
             },
             ...mapActions({
                 delToken: 'user/delToken',
+                isValidSession: 'user/isValidSession',
             })
         }
     }

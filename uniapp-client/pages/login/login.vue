@@ -9,7 +9,7 @@
         <view class="uni-container">
             <uni-forms ref="form" v-model="formData" :rules="rules" @submit="submit">
                 <uni-forms-item left-icon="person-filled" name="username" labelWidth="35">
-                    <input ref="usernameInput" @confirm="login" class="uni-input-border" type="text" placeholder="账户"
+                    <input ref="usernameInput" @confirm="login" class="uni-input-border"  type="text" placeholder="账户"
                         v-model="formData.username" />
                 </uni-forms-item>
                 <uni-forms-item left-icon="locked-filled" class="icon-container" name="password" labelWidth="35">
@@ -114,9 +114,13 @@
             this.focus()
             // #endif
             // #endif
+            this.formData.username =  uni.getStorageSync("username-now", this.formData.username);
             this.createCaptcha()
         },
         methods: {
+            resetForm(){
+                this.formData.captcha = "";
+            },
             async submit(event) {
                 if (this.loading) {
                     return
@@ -142,12 +146,14 @@
                         title: "后台出错",
                         icon: "none"
                     })
+                    this.resetForm();
                 }
                 if (res.code == 50000) {
                     uni.showToast({
                         title: res.msg,
                         icon: "none"
                     })
+                    this.resetForm()
                 }
                 if (res.code == 20000) {
                     uni.showToast({
@@ -155,7 +161,7 @@
                         icon: "none"
                     })
                     uni.setStorageSync("j-token", res.data.token);
-
+                    uni.setStorageSync("username-now", this.formData.username);
                     await setTimeout(function() {
                         uni.redirectTo({
                             url: config.index.url
