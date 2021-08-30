@@ -8,6 +8,9 @@ export default {
     error: {
         url: '/pages/error/404' // 404 Not Found 错误页面路径
     },
+    showIfm: {
+        url: '/windows/pages/showIfm' // 展示用户信息界面
+    },
     navBar: { // 顶部导航
         logo: '/static/logo.png', // 左侧 Logo
     },

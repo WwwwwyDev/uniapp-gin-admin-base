@@ -24,7 +24,14 @@
         "style": {
             "navigationBarTitleText": "测试"
         }
-
+    },{
+        "path": "windows/pages/showIfm",
+        "style": {
+            "navigationStyle": "default",
+            "topWindow": false,
+            "leftWindow": false,
+            "navigationBarTitleText": "用户信息"
+        }
     }],
     "globalStyle": {
         "navigationStyle": "custom",

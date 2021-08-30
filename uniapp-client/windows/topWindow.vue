@@ -1,6 +1,6 @@
 <template>
     <view class="header">
-  <!--  #ifdef H5 -->
+        <!--  #ifdef H5 -->
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
             style="position: absolute; width: 0; height: 0">
             <symbol xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" id="icon-bug">
@@ -9,13 +9,14 @@
                 </path>
             </symbol>
         </svg>
-<!-- #endif -->
+        <!-- #endif -->
         <view class="navbar" :class="{'navbar-mini':!matchLeftWindow,'popup-menu':popupMenuOpened}">
             <view class="navbar-left pointer">
                 <navigator class="logo" open-type="reLaunch" url="/">
                     <image :src="logo" mode="heightFix"></image>
                     <text>后台管理系统</text>
-                    <uni-link href="https://gitee.com/wu_wen_yi/uniapp-gin-admin-base" text="开源地址" showUnderLine="true" color="#0000FF" :showUnderLine="true" ></uni-link>
+                    <uni-link href="https://gitee.com/wu_wen_yi/uniapp-gin-admin-base" text="开源地址" showUnderLine="true"
+                        color="#0000FF" :showUnderLine="true"></uni-link>
                 </navigator>
                 <uni-icons @click="toggleSidebar" type="bars" class="menu-icon" size="30" color="#999"></uni-icons>
             </view>
@@ -34,10 +35,10 @@
                             <uni-icons class="person" type="person" color="#666" size="13"></uni-icons>
                             <text>{{userInfo.username}}</text>
                         </view>
-                        <view class="menu-item" @click="personIfm">
+                        <view class="menu-item" @click="showIfm">
                             <text class="logout pointer">个人信息</text>
                         </view>
-                        <view class="menu-item" @click="chagePassword">
+                        <view class="menu-item" @click="changePassword">
                             <text class="logout pointer">修改密码</text>
                         </view>
                         <view class="menu-item " @click="logout">
@@ -49,15 +50,62 @@
             </view>
         </view>
         <uni-popup ref="passwordPopup" type="center">
-        	<view class="modal" style="width:400px; padding: 20px;">
-        		
-        	</view>
+            <view class="modal" style="width:400px; padding: 20px;">
+                <view class="uni-header">
+                	<view class="uni-group">
+                		<view class="uni-title">修改密码</view>
+                	</view>
+                </view>
+                <view class="uni-container">
+                    <uni-forms ref="resetPwdForm" v-model="resetPwdFormData" :rules="rules" @submit="submit">
+                    	<uni-forms-item label="旧密码" name="oldPassword" labelWidth="85">
+                    		<input class="uni-input-border" type="password" placeholder="旧密码" v-model="resetPwdFormData.oldPassword" />
+                    	</uni-forms-item>
+                    </uni-forms>
+                	<!-- <uni-forms ref="resetPwdForm" v-model="password" :rules="rules" @submit="submit">
+                		<uni-forms-item label="旧密码" name="oldPassword" labelWidth="85">
+                			<input class="uni-input-border" type="password" placeholder="旧密码" v-model="" />
+                		</uni-forms-item>
+                
+                		<uni-forms-item label="新密码" name="newPassword" labelWidth="85">
+                			<input class="uni-input-border" :password="showPassword" placeholder="新密码" v-model="" />
+                			<text class="uni-icon-password-eye pointer" :class="[!showPassword ? 'uni-eye-active' : '']" @click="">&#xe568;</text>
+                		</uni-forms-item>
+                
+                		<uni-forms-item label="确认新密码" name="passwordConfirmation" labelWidth="85" :errorMessage="errorMessage">
+                			<input @confirm="submitForm" class="uni-input-border" :password="showPasswordAgain"
+                			 placeholder="确认新密码" v-model="" />
+                			<text class="uni-icon-password-eye pointer" :class="[!showPasswordAgain ? 'uni-eye-active' : '']" @click="">&#xe568;</text>
+                		</uni-forms-item>
+                		<view class="uni-button-group pointer">
+                			<button class="uni-button uni-button-full" type="primary"  @click="">保存</button>
+                		</view>
+                	</uni-forms> -->
+                </view>
+            </view>
+        </uni-popup>
+        <uni-popup ref="ifmPopup" type="center">
+           <view class="modal" style="width:400px; padding: 20px;">
+                <view class="uni-title">个人信息</view>
+                <uni-list>
+                    <uni-list-chat :avatar-circle="true" :avatar="userInfo.headerImg"></uni-list-chat>
+                    <uni-list-item title="用户名" :rightText="userInfo.username"></uni-list-item>
+                    <uni-list-item title="昵称" :rightText="userInfo.nickName"></uni-list-item>
+                    <uni-list-item title="联系电话" :rightText="userInfo.phone"></uni-list-item>
+                    <uni-list-item title="邮箱" :rightText="userInfo.email"></uni-list-item>
+                </uni-list>
+                <view style="padding: 20upx 100upx 20upx 100upx;">
+                    <button type="primary">修改</button>
+                </view>
+            </view>
         </uni-popup>
     </view>
 </template>
 
 <script>
-    import { mapActions } from 'vuex'
+    import {
+        mapActions
+    } from 'vuex'
     import config from '@/admin.config.js'
     export default {
         props: {
@@ -75,7 +123,16 @@
             return {
                 ...config.navBar,
                 userInfo: {
-                    username: 'test'
+                    username: '',
+                    nickName: '',
+                    email: '',
+                    phone: '',
+                    headerImg: '',
+                },
+                resetPwdFormData:{
+                    username: '',
+                    oldPassword: '',
+                    newPassword: '',
                 },
                 popupMenuOpened: false,
                 mpCapsule: 0
@@ -86,27 +143,45 @@
             let menuButtonInfo = uni.getMenuButtonBoundingClientRect()
             this.mpCapsule = menuButtonInfo.width
             // #endif
+            this.userInfo.username = uni.getStorageSync("username-now")
         },
-        
+
         methods: {
             showPasswordPopup() {
-            	if (this.popupMenuOpened) {
-            		this.popupMenuOpened = false
-            	}
-            	this.$refs.passwordPopup.open()
+                if (this.popupMenuOpened) {
+                    this.popupMenuOpened = false
+                }
+                this.$refs.passwordPopup.open()
             },
             toPasswordPage() {
                 console.log("to")
-            	// uni.navigateTo({
-            	// 	url: '/pages/changepwd/changepwd'
-            	// })
+                // uni.navigateTo({
+                // 	url: '/pages/changepwd/changepwd'
+                // })
             },
-            chagePassword() {
-            	!this.matchLeftWindow ? this.toPasswordPage() : this.showPasswordPopup()
+            async showIfmPopup() {
+                if (this.popupMenuOpened) {
+                    this.popupMenuOpened = false
+                }
+                let res = await this.getUserInfo();
+                if(res === null){
+                    this.isValidSession()
+                    return;
+                }
+                this.userInfo = res;
+                this.$refs.ifmPopup.open()
+            },
+            toIfmPage() {
+                uni.navigateTo({
+                    url: config.showIfm.url
+                })
+            },
+            changePassword() {
+                !this.matchLeftWindow ? this.toPasswordPage() : this.showPasswordPopup()
             },
             async logout() {
                 let f = await this.delToken()
-                if (!f){
+                if (!f) {
                     this.isValidSession()
                     return;
                 }
@@ -118,7 +193,7 @@
                     uni.redirectTo({
                         url: config.login.url
                     })
-                }, 500);              
+                }, 500);
             },
             togglePopupMenu() {
                 this.popupMenuOpened = !this.popupMenuOpened
@@ -130,12 +205,13 @@
                     uni.hideLeftWindow()
                 }
             },
-            personIfm(){
-                console.log("ifm")
+            showIfm() {
+                !this.matchLeftWindow ? this.toIfmPage() : this.showIfmPopup()
             },
             ...mapActions({
                 delToken: 'user/delToken',
                 isValidSession: 'user/isValidSession',
+                getUserInfo: 'user/getUserInfo'
             })
         }
     }

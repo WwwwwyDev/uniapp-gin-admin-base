@@ -52,7 +52,6 @@ func RateLimit() gin.HandlerFunc {
 					return
 				}
 				if duration == time.Second*-1{
-
 					_, err := global.REDIS.Set(IP, 0, time.Second*10).Result()
 					if err != nil {
 						global.LOG.Error(err)

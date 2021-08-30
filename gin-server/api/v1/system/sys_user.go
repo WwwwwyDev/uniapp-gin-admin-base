@@ -10,7 +10,7 @@ import (
 	"gin-server/util/app"
 	"gin-server/util/captcha"
 	"gin-server/util/e"
-	"gin-server/util/valid"
+	"gin-server/util/valid/system"
 	"github.com/gin-gonic/gin"
 	uuid "github.com/satori/go.uuid"
 	"time"
@@ -31,7 +31,7 @@ func Register(c *gin.Context) {
 		return
 	}
 	u := model.SysUser{Username: r.Username, Password: r.Password, Salt: uuid.NewV4().String(), NickName: r.NickName, Email: r.Email, Phone: r.Phone, HeaderImg: r.HeaderImg}
-	err1 := valid.IsValid4sysUser(u)
+	err1 := system.IsValid4sysUser(u)
 	if err1 != nil {
 		app.Error(c, e.ERROR_REGISTER_FAIL, err1, err1.Error())
 		return

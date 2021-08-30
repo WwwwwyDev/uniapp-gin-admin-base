@@ -1,8 +1,8 @@
 package request
 
 type Register struct {
-	Username  string `json:"userName"`  // 用户名
-	Password  string `json:"passWord"`  // 密码
+	Username  string `json:"username"`  // 用户名
+	Password  string `json:"password"`  // 密码
 	NickName  string `json:"nickName"`  //昵称
 	HeaderImg string `json:"headerImg"` //头像链接
 	Email     string `json:"email"`     //电子邮箱

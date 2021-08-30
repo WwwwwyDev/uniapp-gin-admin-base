@@ -66,6 +66,7 @@
                                 errorMessage: '请输入账户',
                             },
                             {
+                                pattern: '^.{4,16}$',   //正则校验(与后端匹配)
                                 minLength: 4,
                                 maxLength: 16,
                                 errorMessage: '账户长度在{minLength}到{maxLength}个字符',
@@ -79,6 +80,7 @@
                                 errorMessage: '请输入正确的密码',
                             },
                             {
+                                pattern: '^.{6,18}$',   //正则校验(与后端匹配)
                                 minLength: 6,
                                 maxLength: 16,
                                 errorMessage: '密码长度在{minLength}到{maxLength}个字符',
@@ -114,7 +116,7 @@
             this.focus()
             // #endif
             // #endif
-            this.formData.username =  uni.getStorageSync("username-now", this.formData.username);
+            this.formData.username =  uni.getStorageSync("username-now");
             this.createCaptcha()
         },
         methods: {
