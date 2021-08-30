@@ -7,17 +7,19 @@ import (
 )
 
 type Claims struct {
-	UserID  uint `json:"userID"`
+	IpAddress string `json:"ipAddress"`
+	UserID    uint   `json:"userID"`
 	jwt.StandardClaims
 }
 
 // GenToken 生成JWT
-func GenToken(userID uint) (string, string) {
+func GenToken(userID uint, ipAddress string) (string, string) {
 	// 创建一个我们自己的声明
 	c := Claims{
+		ipAddress,
 		userID, // 自定义字段
 		jwt.StandardClaims{
-			Issuer:    global.CONFIG.Jwt.Issuer,              // 签发人
+			 Issuer:    global.CONFIG.Jwt.Issuer, // 签发人
 		},
 	}
 	// 使用指定的签名方法创建签名对象
@@ -32,7 +34,7 @@ func GenToken(userID uint) (string, string) {
 }
 
 // ParseToken 解析JWT
-func ParseToken(tokenString string, secret string) (*Claims){
+func ParseToken(tokenString string, secret string) *Claims {
 	// 解析token
 	token, err := jwt.ParseWithClaims(tokenString, &Claims{}, func(token *jwt.Token) (i interface{}, err error) {
 		return []byte(secret), nil

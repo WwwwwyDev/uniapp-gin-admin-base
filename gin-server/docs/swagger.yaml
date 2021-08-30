@@ -1,4 +1,16 @@
 definitions:
+  request.ChangePassword:
+    properties:
+      newPassword:
+        description: 新密码
+        type: string
+      oldPassword:
+        description: 旧密码
+        type: string
+      username:
+        description: 用户名
+        type: string
+    type: object
   request.Login:
     properties:
       captcha:
@@ -25,13 +37,13 @@ definitions:
       nickName:
         description: 昵称
         type: string
-      passWord:
+      password:
         description: 密码
         type: string
       phone:
         description: 联系电话
         type: string
-      userName:
+      username:
         description: 用户名
         type: string
     type: object
@@ -77,6 +89,25 @@ paths:
       summary: 生成验证码
       tags:
       - SysCaptcha
+  /api/v1/sysUser/changePassword:
+    post:
+      parameters:
+      - description: 用户名, 旧密码, 新密码
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.ChangePassword'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 20000,"data": {},"msg": "修改密码成功"}'
+          schema:
+            type: string
+      summary: 修改密码
+      tags:
+      - SysUser
   /api/v1/sysUser/login:
     post:
       parameters:
@@ -109,7 +140,7 @@ paths:
       - application/json
       responses:
         "200":
-          description: '{"code": 20000,"data": {},"msg": "密码正确"}'
+          description: '{"code": 20000,"data": {},"msg": "注册成功"}'
           schema:
             type: string
       summary: 用户注册

@@ -86,6 +86,36 @@ var doc = `{
                 }
             }
         },
+        "/api/v1/sysUser/changePassword": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SysUser"
+                ],
+                "summary": "修改密码",
+                "parameters": [
+                    {
+                        "description": "用户名, 旧密码, 新密码",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.ChangePassword"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 20000,\"data\": {},\"msg\": \"修改密码成功\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/sysUser/login": {
             "post": {
                 "produces": [
@@ -138,7 +168,7 @@ var doc = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "{\"code\": 20000,\"data\": {},\"msg\": \"密码正确\"}",
+                        "description": "{\"code\": 20000,\"data\": {},\"msg\": \"注册成功\"}",
                         "schema": {
                             "type": "string"
                         }
@@ -148,6 +178,23 @@ var doc = `{
         }
     },
     "definitions": {
+        "request.ChangePassword": {
+            "type": "object",
+            "properties": {
+                "newPassword": {
+                    "description": "新密码",
+                    "type": "string"
+                },
+                "oldPassword": {
+                    "description": "旧密码",
+                    "type": "string"
+                },
+                "username": {
+                    "description": "用户名",
+                    "type": "string"
+                }
+            }
+        },
         "request.Login": {
             "type": "object",
             "properties": {
@@ -184,7 +231,7 @@ var doc = `{
                     "description": "昵称",
                     "type": "string"
                 },
-                "passWord": {
+                "password": {
                     "description": "密码",
                     "type": "string"
                 },
@@ -192,7 +239,7 @@ var doc = `{
                     "description": "联系电话",
                     "type": "string"
                 },
-                "userName": {
+                "username": {
                     "description": "用户名",
                     "type": "string"
                 }

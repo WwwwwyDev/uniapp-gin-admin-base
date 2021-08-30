@@ -15,3 +15,9 @@ type Login struct {
 	Captcha   string `json:"captcha"`   // 验证码
 	CaptchaId string `json:"captchaId"` // 验证码ID
 }
+
+type ChangePassword struct {
+	Username  string `json:"username"`  // 用户名
+	OldPassword  string `json:"oldPassword"`  // 旧密码
+	NewPassword   string `json:"newPassword"`   // 新密码
+}

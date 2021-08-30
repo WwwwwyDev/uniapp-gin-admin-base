@@ -9,4 +9,5 @@ func SysUserRouter(r *gin.RouterGroup)  {
 	r = r.Group("/sysUser")
 	r.POST("/register", system.Register)
 	r.POST("/login", system.Login)
+	r.POST("/changePassword", system.ChangePassword)
 }

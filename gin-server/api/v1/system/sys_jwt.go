@@ -26,12 +26,18 @@ func DecodeJwt(c *gin.Context) {
 		app.Error(c, e.ERROR, errors.New("jwt签发人校验失败"), "jwt签发人校验失败")
 		return
 	}
+	if claims.IpAddress != c.ClientIP(){
+		app.Error(c, e.ERROR, errors.New("异常的token"), "异常的token")
+		return
+	}
 	err, inter := service.GetSysUserById(claims.UserID)
 	if err != nil {
 		global.LOG.Error(err)
 		app.Error(c, e.ERROR, err, err.Error())
 		return
 	}
+	inter.Password = "敏感信息，已屏蔽"
+	inter.Salt = "敏感信息，已屏蔽"
 	app.OK(c, inter,"解码成功")
 }
 
