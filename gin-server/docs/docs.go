@@ -23,7 +23,7 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1/c/jwt": {
+        "/api/v1/c/decodeJwt": {
             "post": {
                 "produces": [
                     "application/json"
@@ -40,7 +40,28 @@ var doc = `{
                         }
                     }
                 }
-            },
+            }
+        },
+        "/api/v1/c/isValidJwt": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "SysJwt"
+                ],
+                "summary": "jwt验证",
+                "responses": {
+                    "200": {
+                        "description": "{\"code\": 20000,\"data\":{},\"msg\":\"验证通过\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/c/jwt": {
             "delete": {
                 "produces": [
                     "application/json"

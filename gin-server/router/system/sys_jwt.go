@@ -6,7 +6,7 @@ import (
 )
 
 func SysJwtRouter(r *gin.RouterGroup)  {
-	r = r.Group("/jwt")
-	r.POST("", system.DecodeJwt)
-	r.DELETE("",system.DelJwt)
+	r.POST("/decodeJwt", system.DecodeJwt)
+	r.POST("/isValidJwt", system.IsValidJwt)
+	r.DELETE("/jwt",system.DelJwt)
 }

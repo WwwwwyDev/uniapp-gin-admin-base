@@ -11,6 +11,9 @@ export default {
     showIfm: {
         url: '/windows/pages/showIfm' // 展示用户信息界面
     },
+    changePassword: {
+        url: '/windows/pages/changePassword' // 修改密码界面
+    },
     navBar: { // 顶部导航
         logo: '/static/logo.png', // 左侧 Logo
     },

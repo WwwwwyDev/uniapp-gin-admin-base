@@ -17,7 +17,7 @@ export default {
     },
     actions: {
         async getUserInfo() {
-            let res = await $http.post('/api/v1/c/jwt');
+            let res = await $http.post('/api/v1/c/decodeJwt');
             if(res.code != 20000){
                 return null
             }
@@ -25,7 +25,7 @@ export default {
         },
         async isValidToken() {
             if (uni.getStorageSync("j-token")===""){return false}
-            let res = await $http.post('/api/v1/c/jwt');
+            let res = await $http.post('/api/v1/c/isValidJwt');
             if(res.code != 20000){
                 return false
             }

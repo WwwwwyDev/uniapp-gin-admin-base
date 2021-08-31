@@ -50,6 +50,30 @@ definitions:
 info:
   contact: {}
 paths:
+  /api/v1/c/decodeJwt:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 20000,"data":{},"msg":"解码成功"}'
+          schema:
+            type: string
+      summary: jwt解码,反馈用户信息
+      tags:
+      - SysJwt
+  /api/v1/c/isValidJwt:
+    post:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: '{"code": 20000,"data":{},"msg":"验证通过"}'
+          schema:
+            type: string
+      summary: jwt验证
+      tags:
+      - SysJwt
   /api/v1/c/jwt:
     delete:
       produces:
@@ -60,17 +84,6 @@ paths:
           schema:
             type: string
       summary: 删除用户token
-      tags:
-      - SysJwt
-    post:
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: '{"code": 20000,"data":{},"msg":"解码成功"}'
-          schema:
-            type: string
-      summary: jwt解码,反馈用户信息
       tags:
       - SysJwt
   /api/v1/sysCaptcha:

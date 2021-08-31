@@ -57,30 +57,27 @@
                 	</view>
                 </view>
                 <view class="uni-container">
-                    <uni-forms ref="resetPwdForm" v-model="resetPwdFormData" :rules="rules" @submit="submit">
+                    <uni-forms ref="resetPwdForm" v-model="resetPwdFormData" :rules="resetPwdrules" @submit="submitPwd">
+                        <uni-forms-item label="用户名" name="oldPassword" labelWidth="85">
+                        	<input class="uni-input-border" disabled="true" v-model="userInfo.username" />
+                        </uni-forms-item>
                     	<uni-forms-item label="旧密码" name="oldPassword" labelWidth="85">
-                    		<input class="uni-input-border" type="password" placeholder="旧密码" v-model="resetPwdFormData.oldPassword" />
-                    	</uni-forms-item>
+                    		<input class="uni-input-border" :password="showOldPassword" placeholder="旧密码" v-model="resetPwdFormData.oldPassword" />
+                            <text class="uni-icon-password-eye pointer" :class="[!showOldPassword ? 'uni-eye-active' : '']" @click="showOldPassword=!showOldPassword">&#xe568;</text>
+                        </uni-forms-item>
+                        <uni-forms-item label="新密码" name="newPassword" labelWidth="85">
+                        	<input class="uni-input-border" :password="showNewPassword" placeholder="新密码" v-model="resetPwdFormData.newPassword" />
+                        	<text class="uni-icon-password-eye pointer" :class="[!showNewPassword ? 'uni-eye-active' : '']" @click="showNewPassword=!showNewPassword">&#xe568;</text>
+                        </uni-forms-item>
+                        <uni-forms-item label="确认新密码" name="newPasswordAgain" labelWidth="85">
+                        	<input @confirm="updatePwd" class="uni-input-border" :password="showNewPasswordAgain"
+                        	 placeholder="确认新密码" v-model="resetPwdFormData.newPasswordAgain" />
+                        	<text class="uni-icon-password-eye pointer" :class="[!showNewPasswordAgain ? 'uni-eye-active' : '']" @click="showNewPasswordAgain=!showNewPasswordAgain">&#xe568;</text>
+                        </uni-forms-item>
+                        <view class="uni-button-group pointer">
+                        	<button class="uni-button uni-button-full" type="primary"  @click="updatePwd">修改</button>
+                        </view>
                     </uni-forms>
-                	<!-- <uni-forms ref="resetPwdForm" v-model="password" :rules="rules" @submit="submit">
-                		<uni-forms-item label="旧密码" name="oldPassword" labelWidth="85">
-                			<input class="uni-input-border" type="password" placeholder="旧密码" v-model="" />
-                		</uni-forms-item>
-                
-                		<uni-forms-item label="新密码" name="newPassword" labelWidth="85">
-                			<input class="uni-input-border" :password="showPassword" placeholder="新密码" v-model="" />
-                			<text class="uni-icon-password-eye pointer" :class="[!showPassword ? 'uni-eye-active' : '']" @click="">&#xe568;</text>
-                		</uni-forms-item>
-                
-                		<uni-forms-item label="确认新密码" name="passwordConfirmation" labelWidth="85" :errorMessage="errorMessage">
-                			<input @confirm="submitForm" class="uni-input-border" :password="showPasswordAgain"
-                			 placeholder="确认新密码" v-model="" />
-                			<text class="uni-icon-password-eye pointer" :class="[!showPasswordAgain ? 'uni-eye-active' : '']" @click="">&#xe568;</text>
-                		</uni-forms-item>
-                		<view class="uni-button-group pointer">
-                			<button class="uni-button uni-button-full" type="primary"  @click="">保存</button>
-                		</view>
-                	</uni-forms> -->
                 </view>
             </view>
         </uni-popup>
@@ -94,8 +91,8 @@
                     <uni-list-item title="联系电话" :rightText="userInfo.phone"></uni-list-item>
                     <uni-list-item title="邮箱" :rightText="userInfo.email"></uni-list-item>
                 </uni-list>
-                <view style="padding: 20upx 100upx 20upx 100upx;">
-                    <button type="primary">修改</button>
+                <view class="uni-button-group pointer">
+                	<button class="uni-button uni-button-full" type="primary">修改</button>
                 </view>
             </view>
         </uni-popup>
@@ -122,6 +119,9 @@
         data() {
             return {
                 ...config.navBar,
+                showNewPassword: true,
+                showNewPasswordAgain: true,
+                showOldPassword: true,
                 userInfo: {
                     username: '',
                     nickName: '',
@@ -133,9 +133,52 @@
                     username: '',
                     oldPassword: '',
                     newPassword: '',
+                    newPasswordAgain: ''
                 },
                 popupMenuOpened: false,
-                mpCapsule: 0
+                mpCapsule: 0,
+                resetPwdrules: {
+                    // 对password字段进行必填验证
+                    oldPassword: {
+                        rules: [{
+                                required: true,
+                                errorMessage: '请输入正确的密码',
+                            },
+                            {
+                                pattern: '^.{6,18}$',   //正则校验(与后端匹配)
+                                minLength: 6,
+                                maxLength: 16,
+                                errorMessage: '密码长度在{minLength}到{maxLength}个字符',
+                            }
+                        ]
+                    },
+                    newPassword: {
+                        rules: [{
+                                required: true,
+                                errorMessage: '请输入正确的密码',
+                            },
+                            {
+                                pattern: '^.{6,18}$',   //正则校验(与后端匹配)
+                                minLength: 6,
+                                maxLength: 16,
+                                errorMessage: '密码长度在{minLength}到{maxLength}个字符',
+                            }
+                        ]
+                    },
+                    newPasswordAgain: {
+                        rules: [{
+                                required: true,
+                                errorMessage: '请输入正确的密码',
+                            },
+                            {
+                                pattern: '^.{6,18}$',   //正则校验(与后端匹配)
+                                minLength: 6,
+                                maxLength: 16,
+                                errorMessage: '密码长度在{minLength}到{maxLength}个字符',
+                            }
+                        ]
+                    },
+                }
             }
         },
         mounted() {
@@ -154,10 +197,9 @@
                 this.$refs.passwordPopup.open()
             },
             toPasswordPage() {
-                console.log("to")
-                // uni.navigateTo({
-                // 	url: '/pages/changepwd/changepwd'
-                // })
+                uni.navigateTo({
+                	url: config.changePassword.url
+                })
             },
             async showIfmPopup() {
                 if (this.popupMenuOpened) {
@@ -207,6 +249,46 @@
             },
             showIfm() {
                 !this.matchLeftWindow ? this.toIfmPage() : this.showIfmPopup()
+            },
+            async submitPwd(){
+                if(this.resetPwdFormData.newPassword != this.resetPwdFormData.newPasswordAgain){
+                    uni.showToast({
+                        title: " 两次输入密码不一致",
+                        icon: "none"
+                    })
+                    return;
+                }
+                if (this.resetPwdFormData.oldPassword == this.resetPwdFormData.newPasswordAgain) {
+                    uni.showToast({
+                        title: " 新旧密码不能相同",
+                        icon: "none"
+                    })
+                    return;
+                }
+                this.resetPwdFormData.username = this.userInfo.username;
+                let res = await this.$http.post('/api/v1/sysUser/changePassword', this.resetPwdFormData);
+                if (res.code == -1) {
+                    uni.showToast({
+                        title: "后台出错",
+                        icon: "none"
+                    })
+                }
+                if (res.code == 50002) {
+                    uni.showToast({
+                        title: res.msg,
+                        icon: "none"
+                    })
+                }
+                if (res.code == 20000) {
+                    uni.showToast({
+                        title: res.msg,
+                        icon: "none"
+                    })
+                    this.$refs.passwordPopup.close();
+                }
+            },
+            updatePwd(){
+                this.$refs.resetPwdForm.submit();
             },
             ...mapActions({
                 delToken: 'user/delToken',

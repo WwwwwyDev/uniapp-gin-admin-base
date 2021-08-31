@@ -90,7 +90,7 @@
                     // 对captcha字段进行必填验证
                     captcha: {
                         rules: [{
-                            required: true,
+                            required: false,
                             errorMessage: '请输入验证码',
                         }]
                     },
@@ -100,15 +100,18 @@
         async mounted() {
             let f = await this.isValidToken()
             if (f) {
-                uni.showToast({
-                    title: "请不要重复登录",
-                    icon: "none"
+                uni.redirectTo({
+                    url: config.index.url
                 })
-                await setTimeout(function() {
-                    uni.redirectTo({
-                        url: config.index.url
-                    })
-                }, 600);
+                // uni.showToast({
+                //     title: "请不要重复登录",
+                //     icon: "none"
+                // })
+                // await setTimeout(function() {
+                //     uni.redirectTo({
+                //         url: config.index.url
+                //     })
+                // }, 600);
                 return;
             }
             // #ifdef H5

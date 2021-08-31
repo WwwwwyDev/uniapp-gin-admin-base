@@ -32,7 +32,18 @@
             "leftWindow": false,
             "navigationBarTitleText": "用户信息"
         }
-    }],
+    }    ,{
+            "path" : "windows/pages/changePassword",
+            "style" :                                                                                    
+            {
+                "navigationStyle": "default",
+                "topWindow": false,
+                "leftWindow": false,
+                "navigationBarTitleText": "修改密码"
+            }
+            
+        }
+    ],
     "globalStyle": {
         "navigationStyle": "custom",
         "navigationBarTextStyle": "black",

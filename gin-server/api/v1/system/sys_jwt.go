@@ -14,7 +14,7 @@ import (
 // @Summary jwt解码,反馈用户信息
 // @Produce  application/json
 // @Success 200 {string} string "{"code": 20000,"data":{},"msg":"解码成功"}"
-// @Router /api/v1/c/jwt [post]
+// @Router /api/v1/c/decodeJwt [post]
 func DecodeJwt(c *gin.Context) {
 	get, _ := c.Get("claims")
 	if get == nil{
@@ -39,6 +39,29 @@ func DecodeJwt(c *gin.Context) {
 	inter.Password = "敏感信息，已屏蔽"
 	inter.Salt = "敏感信息，已屏蔽"
 	app.OK(c, inter,"解码成功")
+}
+
+// @Tags SysJwt
+// @Summary jwt验证
+// @Produce  application/json
+// @Success 200 {string} string "{"code": 20000,"data":{},"msg":"验证通过"}"
+// @Router /api/v1/c/isValidJwt [post]
+func IsValidJwt(c *gin.Context) {
+	get, _ := c.Get("claims")
+	if get == nil{
+		app.Error(c, e.ERROR, errors.New("jwt签发人校验失败"), "jwt签发人校验失败")
+		return
+	}
+	claims := get.(*util.Claims)
+	if claims.Issuer != global.CONFIG.Jwt.Issuer{
+		app.Error(c, e.ERROR, errors.New("jwt签发人校验失败"), "jwt签发人校验失败")
+		return
+	}
+	if claims.IpAddress != c.ClientIP(){
+		app.Error(c, e.ERROR, errors.New("异常的token"), "异常的token")
+		return
+	}
+	app.OK(c,map[string]interface{}{} ,"解码成功")
 }
 
 
