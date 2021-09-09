@@ -36,9 +36,9 @@ Temporary Items
 node_modules/
 .node_modules/
 .eslintcache
-unpackage/dist/build/
-unpackage/dist/dev/
-unpackage/*
+uniapp-admin-client/unpackage/dist/build/*
+uniapp-admin-client/unpackage/dist/dev/*
+uniapp-admin-client/unpackage/*
 
 # python
 *.pyc
